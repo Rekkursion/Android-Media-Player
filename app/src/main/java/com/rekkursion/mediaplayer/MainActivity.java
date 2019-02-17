@@ -5,30 +5,31 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
-import android.widget.MediaController;
+import android.widget.SeekBar;
 import android.widget.Toast;
 
 import java.io.IOException;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, MediaControllerFragment.OnFragmentInteractionListener {
     private Context context = null;
     private NavigationView navMain = null;
     private DrawerLayout dlyMain = null;
-    private MediaPlayer mediaPlayer = null;
-    private MediaController mediaController = null;
+    private SeekBar skbMediaPlayBar = null;
+    private GoodMediaPlayer mediaPlayer = null;
+    private MediaControllerFragment mediaControllerFragment = null;
     private final int REQ_CODE_REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 4731;
     private final int REQ_CODE_INTENT_GET_AUDIO_FILE_FROM_EXTERNAL_STORAGE = 2002;
 
@@ -41,6 +42,12 @@ public class MainActivity extends AppCompatActivity
         mediaPlayer = new GoodMediaPlayer(context);
 
         initViews();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mediaPlayer.setControllerContainerAndChildren(mediaControllerFragment.getContainer());
     }
 
     // the navigation buttons 'back' clicked
@@ -89,8 +96,8 @@ public class MainActivity extends AppCompatActivity
                 Uri fileUri = null;
                 try {
                     fileUri = convertUri(data.getData());
-                    mediaPlayer.setDataSource(fileUri.toString());
-                    mediaPlayer.prepareAsync();
+                    mediaControllerFragment.onGotAudioFile(fileUri);
+                    dlyMain.closeDrawer(GravityCompat.START);
 
                 } catch (NullPointerException e) {
                     e.printStackTrace();
@@ -108,12 +115,34 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    // media controller fragment interaction
+    @Override
+    public void onMediaControllerFragmentInteraction(Uri fileUri) throws IOException, IllegalStateException {
+        mediaPlayer.setDataSourceThenPrepareAsync(fileUri);
+    }
+
+    @Override
+    protected void onDestroy() {
+        mediaPlayer.onDestroy();
+        super.onDestroy();
+    }
+
     // initialize views in main activity
     private void initViews() {
+        // main drawer layout
         dlyMain = findViewById(R.id.dly_main);
 
+        // main navigation view
         navMain = findViewById(R.id.nav_main);
         navMain.setNavigationItemSelectedListener(this);
+
+        // get media controller fragment
+        mediaControllerFragment = MediaControllerFragment.newInstance();
+        // add media controller fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.fly_media_controller, mediaControllerFragment);
+        transaction.commit();
     }
 
     // get audio file from external storage

@@ -2,4 +2,5 @@
 <resources>
     <dimen name="dim_drawer_width">220dp</dimen>
     <dimen name="dim_drawer_header_height">30dp</dimen>
+    <dimen name="dim_controller_text_size">15sp</dimen>
 </resources>

@@ -2,4 +2,8 @@
     <string name="app_name">MediaPlayer</string>
     <string name="str_item_title_get_audio_file">Get Audio File</string>
     <string name="str_item_title_from_external_storage">From External Storage</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="str_song_length_default">00:00/00:00</string>
 </resources>
