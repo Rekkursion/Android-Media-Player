@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/itm_get_audio_file"
+        android:title="@string/str_item_title_get_audio_file" >
+        <menu>
+            <item
+                android:id="@+id/itm_get_audio_file_from_external_storage"
+                android:title="@string/str_item_title_from_external_storage" />
+        </menu>
+    </item>
+</menu>

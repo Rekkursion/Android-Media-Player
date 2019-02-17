@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">MediaPlayer</string>
+    <string name="str_item_title_get_audio_file">Get Audio File</string>
+    <string name="str_item_title_from_external_storage">From External Storage</string>
+</resources>

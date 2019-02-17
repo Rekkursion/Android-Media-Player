@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    android:id="@+id/dly_main"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <!-- main drawer -->
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_main"
+        android:layout_gravity="start"
+        android:layout_width="@dimen/dim_drawer_width"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/nav_main_header_layout"
+        app:menu="@menu/nav_main_menu" />
+</android.support.v4.widget.DrawerLayout>
