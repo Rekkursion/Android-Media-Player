@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -16,12 +17,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.widget.MediaController;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+import java.io.IOException;
+
+public class MainActivity extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener {
     private Context context = null;
-    private DrawerLayout dlyMain = null;
     private NavigationView navMain = null;
+    private DrawerLayout dlyMain = null;
+    private MediaPlayer mediaPlayer = null;
+    private MediaController mediaController = null;
     private final int REQ_CODE_REQUEST_PERMISSION_READ_EXTERNAL_STORAGE = 4731;
     private final int REQ_CODE_INTENT_GET_AUDIO_FILE_FROM_EXTERNAL_STORAGE = 2002;
 
@@ -31,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setContentView(R.layout.activity_main);
 
         context = this.getApplicationContext();
+        mediaPlayer = new GoodMediaPlayer(context);
+
         initViews();
     }
 
@@ -80,10 +89,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Uri fileUri = null;
                 try {
                     fileUri = convertUri(data.getData());
+                    mediaPlayer.setDataSource(fileUri.toString());
+                    mediaPlayer.prepareAsync();
 
                 } catch (NullPointerException e) {
                     e.printStackTrace();
-                    Toast.makeText(context, "Error happened when getting files", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Error happened when getting file", Toast.LENGTH_SHORT).show();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, "Error happened when loading audio data", Toast.LENGTH_SHORT).show();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                    Toast.makeText(context, "Error happened when preparing audio data", Toast.LENGTH_SHORT).show();
                 } finally {
                     fileUri = null;
                 }
